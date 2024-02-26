@@ -12,7 +12,7 @@ from pymongo.server_api import ServerApi
 from sqlalchemy import create_engine
 #pip install streamlit_lottie tyr to animation
 
-# my sql time to seconds code in 9 the qustion hint
+
 
 # # SETTING PAGE CONFIGURATIONS
 icon = Image.open("Youtube_logo.png")
