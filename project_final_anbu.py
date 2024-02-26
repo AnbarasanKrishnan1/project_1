@@ -489,6 +489,3 @@ if selected == "View":
                             ORDER BY b.Total_Comments DESC""")
         df = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
         st.write(df)
-
-
-    
