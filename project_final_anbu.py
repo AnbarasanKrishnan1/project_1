@@ -12,7 +12,7 @@ from pymongo.server_api import ServerApi
 from sqlalchemy import create_engine
 #pip install streamlit_lottie tyr to animation
 
-
+# my sql time to seconds code in 9 the qustion hint
 
 # # SETTING PAGE CONFIGURATIONS
 icon = Image.open("Youtube_logo.png")
@@ -25,7 +25,7 @@ st.set_page_config(page_title= "Youtube Data Harvesting and Warehousing | By Anb
 with st.sidebar:
     st.image("Youtubes.png", use_column_width=True)
     selected = option_menu(None, ["Home", "Extract and Transform", "View"],
-                          #icons=["house-door-fill", "tools", "card-text"],
+                        #   icons=[":arrow_forward:", "tools", "card-text"],
                            default_index=0,
                            orientation="vertical",
                            styles={"nav-link": {"font-size": "15x", "text-align": "centre", "margin": "25px",
@@ -47,13 +47,13 @@ try:
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     print(e)
-db = client['youtube_data']
+db = client['data_demo']
 
 # CONNECTING WITH MYSQL DATABASE
 mydb = sql.connect(host="localhost",
                    user="root",
                    password="",
-                   database="youtube_db"
+                   database="data_demo"
                    )
 mycursor = mydb.cursor(buffered=True)
 
@@ -64,23 +64,23 @@ youtube = build('youtube', 'v3', developerKey=api_key)
 
 # FUNCTION TO GET CHANNEL DETAILS
 def get_channel_details(channel_id):
-    ch_data = []
-    response = youtube.channels().list(part='snippet,contentDetails,statistics',
-                                       id=channel_id).execute()
+    ch_data = [] 
+    response = youtube.channels().list(
+               part='snippet,contentDetails,statistics',
+               id=channel_id).execute()
 
-    for i in range(len(response['items'])):
-        data = dict(Channel_id=channel_id[i],
-                    Channel_name=response['items'][i]['snippet']['title'],
-                    Playlist_id=response['items'][i]['contentDetails']['relatedPlaylists']['uploads'],
-                    Subscribers=response['items'][i]['statistics']['subscriberCount'],
-                    Views=response['items'][i]['statistics']['viewCount'],
-                    Total_videos=response['items'][i]['statistics']['videoCount'],
-                    Description=response['items'][i]['snippet']['description'],
-                    Country=response['items'][i]['snippet'].get('country')
+    for item in response['items']:
+        data = dict(Channel_id=item['id'],  # Use 'item' directly
+                    Channel_name=item['snippet']['title'],
+                    Playlist_id=item['contentDetails']['relatedPlaylists']['uploads'],
+                    Subscribers=item['statistics']['subscriberCount'],
+                    Views=item['statistics']['viewCount'],
+                    Total_videos=item['statistics']['videoCount'],
+                    Description=item['snippet']['description'],
+                    Country=item['snippet'].get('country')
                     )
         ch_data.append(data)
     return ch_data
-
 
 # FUNCTION TO GET VIDEO IDS
 def get_channel_videos(channel_id):
@@ -89,6 +89,8 @@ def get_channel_videos(channel_id):
     res = youtube.channels().list(id=channel_id,
                                   part='contentDetails').execute()
     playlist_id = res['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+    #pageToken parameter identifies a specific page in the result set that should be returned. In an API response, the nextPageToken properties identify other pages that could be retrieved.
+    #so we give the next page token None
     next_page_token = None
 
     while True:
@@ -97,8 +99,8 @@ def get_channel_videos(channel_id):
                                            maxResults=50,
                                            pageToken=next_page_token).execute()
 
-        for i in range(len(res['items'])):
-            video_ids.append(res['items'][i]['snippet']['resourceId']['videoId'])
+        for items in (res['items']):
+            video_ids.append(items['snippet']['resourceId']['videoId'])
         next_page_token = res.get('nextPageToken')
 
         if next_page_token is None:
@@ -178,34 +180,44 @@ def channel_names():
 
 # HOME PAGE
 if selected == "Home":
-    # Title Image
-    col1, col2 = st.columns(2, gap='small')
-    col1.markdown("### :blue[Domain] : Social Media")
-    col1.markdown("### :blue[Technologies used] : Python, MongoDB, Youtube Data API, MySql, Streamlit")
-    col1.markdown("### :blue[Overview] : Retrieving the Youtube channels data from the Google API, storing it in a MongoDB as data lake, migrating and transforming data into a SQL database, then querying the data and displaying it in the Streamlit app.")
-    col2.markdown("#   ")
-    col2.markdown("#   ")
-    col2.markdown("#   ")
-    # col2.image("youtubeMain.png")
-
-# EXTRACT and TRANSFORM PAGE
+    st.markdown("<h1 style='text-align: center;'>Social Media Data Integration Project</h1>", unsafe_allow_html=True)
+    st.subheader("Overview")
+    st.write("""This project utilizes a combination of Python, MongoDB, YouTube Data API, MySQL, and Streamlit to streamline the retrieval, storage, 
+             and presentation of YouTube channel data. It involves a systematic process of fetching data from the YouTube API, storing it in MongoDB 
+             for initial storage, migrating and transforming the data into a structured SQL database, and ultimately presenting it through a user-friendly 
+             Streamlit application.""")
+    st.subheader("Key Technologies Used:")
+    st.markdown('''  
+             - Python
+             - MongoDB
+             - YouTube Data API
+             - MySQL
+             - Streamlit ''')
+    st.subheader("Process Overview:")
+    st.markdown('''
+                - Data Retrieval: Utilizing the YouTube Data API to fetch channel data.
+                - Storage: Storing the retrieved data in MongoDB as a data lake for initial storage.
+                - Migration and Transformation: Converting and organizing the data into a SQL database for structured storage and enhanced querying capabilities.
+                - Data Presentation: Displaying the queried data through a Streamlit application, providing users with a seamless interface for accessing and analyzing YouTube channel insights.
+                ''')
+    
 # EXTRACT and TRANSFORM PAGE
 if selected == "Extract and Transform":
     tab1, tab2 = st.columns(2)  # Define two columns for tabs
 
     # EXTRACT TAB
     with tab1:
-        st.markdown("#    ")
+        st.markdown("# ")
         st.write("### Enter YouTube Channel_ID below :")
-        ch_id = st.text_input("Hint : Go to the channel home page, click this aero mark > scroll down, then click share channel, and copy channel ID").split(',')
+        ch_id = st.text_input("Hint : Go to the channel home page, click this aero mark > scroll down, then click share channel, and copy channel ID  Mulit channel ID use comma" ).split(',')
 
         if ch_id and st.button("Extract Data"):
             ch_details = get_channel_details(ch_id)
-            st.write(f'#### Extracted data from :green["{ch_details[0]["Channel_name"]}"] channel')
+            st.write(f'##### Extracted data from :blue["{ch_details[0]["Channel_name"]}"] channel')
             st.table(ch_details)
 
         if st.button("Upload to MongoDB"):
-            with st.spinner('Please Wait for it...'):
+            with st.spinner('Please Wait for Uploading to MongoDB...'):
                 ch_details = get_channel_details(ch_id)
                 v_ids = get_channel_videos(ch_id)
                 vid_details = get_video_details(v_ids)
@@ -237,7 +249,7 @@ if selected == "Extract and Transform":
 
         # Define MySQL table creation queries
         create_channels_table_query = """
-        CREATE TABLE IF NOT EXISTS youtube_db.channels (
+        CREATE TABLE IF NOT EXISTS data_demo.channels (
             Channel_id VARCHAR(255) PRIMARY KEY,
             Channel_name VARCHAR(255),
             Playlist_id VARCHAR(255),
@@ -250,7 +262,7 @@ if selected == "Extract and Transform":
         """
 
         create_videos_table_query = """
-        CREATE TABLE IF NOT EXISTS youtube_db.videos (
+        CREATE TABLE IF NOT EXISTS data_demo.videos (
             Channel_name VARCHAR(255),
             Channel_id VARCHAR(255),
             Video_id VARCHAR(255) PRIMARY KEY,
@@ -269,7 +281,7 @@ if selected == "Extract and Transform":
         """
 
         create_comments_table_query = """
-        CREATE TABLE IF NOT EXISTS youtube_db.comments (
+        CREATE TABLE IF NOT EXISTS data_demo.comments (
             Comment_id VARCHAR(255) PRIMARY KEY,
             Video_id VARCHAR(255),
             Comment_text TEXT,
@@ -477,3 +489,6 @@ if selected == "View":
                             ORDER BY b.Total_Comments DESC""")
         df = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
         st.write(df)
+
+
+    
