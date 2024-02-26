@@ -10,23 +10,25 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 # pip install SQLAlchemy==1.4.0
 from sqlalchemy import create_engine
+#pip install streamlit_lottie tyr to animation
 
+# my sql time to seconds code in 9 the qustion hint
 
 # # SETTING PAGE CONFIGURATIONS
-# icon = Image.open("Youtube_logo.png")
-# st.set_page_config(page_title= "Youtube Data Harvesting and Warehousing | By Akash Jha",
-#                    page_icon= icon,
-#                    layout= "wide",
-#                    initial_sidebar_state= "expanded",
-#                    menu_items={'About': """# This app is created by *Akash Jha!*"""})
+icon = Image.open("Youtube_logo.png")
+st.set_page_config(page_title= "Youtube Data Harvesting and Warehousing | By Anbarasan",
+                   page_icon= icon,
+                   layout= "wide",
+                   initial_sidebar_state= "expanded",
+                   menu_items={'About': """# This app is created by *Anbarasan*"""})  
 
-# CREATING OPTION MENU
 with st.sidebar:
+    st.image("Youtubes.png", use_column_width=True)
     selected = option_menu(None, ["Home", "Extract and Transform", "View"],
-                        #    icons=["house-door-fill", "tools", "card-text"],
+                          #icons=["house-door-fill", "tools", "card-text"],
                            default_index=0,
                            orientation="vertical",
-                           styles={"nav-link": {"font-size": "15x", "text-align": "centre", "margin": "0px",
+                           styles={"nav-link": {"font-size": "15x", "text-align": "centre", "margin": "25px",
                                                 "--hover-color": "#87CEEB"},
                                    "icon": {"font-size": "30px"},
                                    "container": {"max-width": "6000px"},
@@ -177,10 +179,10 @@ def channel_names():
 # HOME PAGE
 if selected == "Home":
     # Title Image
-    col1, col2 = st.columns(2, gap='medium')
-    col1.markdown("# :blue[Domain] : Social Media")
-    col1.markdown("# :blue[Technologies used] : Python, MongoDB, Youtube Data API, MySql, Streamlit")
-    col1.markdown("# :blue[Overview] : Retrieving the Youtube channels data from the Google API, storing it in a MongoDB as data lake, migrating and transforming data into a SQL database, then querying the data and displaying it in the Streamlit app.")
+    col1, col2 = st.columns(2, gap='small')
+    col1.markdown("### :blue[Domain] : Social Media")
+    col1.markdown("### :blue[Technologies used] : Python, MongoDB, Youtube Data API, MySql, Streamlit")
+    col1.markdown("### :blue[Overview] : Retrieving the Youtube channels data from the Google API, storing it in a MongoDB as data lake, migrating and transforming data into a SQL database, then querying the data and displaying it in the Streamlit app.")
     col2.markdown("#   ")
     col2.markdown("#   ")
     col2.markdown("#   ")
@@ -195,7 +197,7 @@ if selected == "Extract and Transform":
     with tab1:
         st.markdown("#    ")
         st.write("### Enter YouTube Channel_ID below :")
-        ch_id = st.text_input("Hint : Goto channel's home page > Right click > View page source > Find channel_id").split(',')
+        ch_id = st.text_input("Hint : Go to the channel home page, click this aero mark > scroll down, then click share channel, and copy channel ID").split(',')
 
         if ch_id and st.button("Extract Data"):
             ch_details = get_channel_details(ch_id)
