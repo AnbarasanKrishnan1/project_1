@@ -37,4 +37,4 @@ Include screenshots of the application interface here.
 - Anbarasan
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License.
