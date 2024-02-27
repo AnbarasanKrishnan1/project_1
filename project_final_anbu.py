@@ -499,15 +499,6 @@ if selected == "View":
         df = pd.DataFrame({'Channel Name': channel_names, 'Average Duration': avg_durations})
         st.write(df)
 
-
-    # elif questions == '9. What is the average duration of all videos in each channel, and what are their corresponding channel names?':
-    #         mycursor.execute("""SELECT Channel_name, AVG(Duration) AS Average_Duration
-    #                             FROM videos
-    #                             GROUP BY Channel_name""")
-    #         df = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
-    #         st.write(df)
-
-
     elif questions == '10. Which videos have the highest number of comments, and what are their corresponding channel names?':
         mycursor.execute("""SELECT a.Channel_name, a.Title AS Video_Title, b.Total_Comments
                             FROM videos AS a
