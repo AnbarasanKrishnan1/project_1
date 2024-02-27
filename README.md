@@ -35,7 +35,7 @@ This project aims to streamline the retrieval, storage, and presentation of YouT
 - Implement scheduled data updates to keep the database current with the latest YouTube channel data.
 
 ## Contributors
-- Anbarasan
+[Anbarasan](https://www.linkedin.com/in/anbarasan-krishnan-data-scientist/)
 
 ## License
 This project is licensed under the MIT License.
