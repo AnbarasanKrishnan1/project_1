@@ -1,4 +1,5 @@
 import pandas as pd
+import time
 import plotly.express as px
 import streamlit as st
 from streamlit_option_menu import option_menu
@@ -47,13 +48,13 @@ try:
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     print(e)
-db = client['data_demo']
+db = client['youtube_data']
 
 # CONNECTING WITH MYSQL DATABASE
 mydb = sql.connect(host="localhost",
                    user="root",
                    password="",
-                   database="data_demo"
+                   database="youtube_db"
                    )
 mycursor = mydb.cursor(buffered=True)
 
@@ -249,7 +250,7 @@ if selected == "Extract and Transform":
 
         # Define MySQL table creation queries
         create_channels_table_query = """
-        CREATE TABLE IF NOT EXISTS data_demo.channels (
+        CREATE TABLE IF NOT EXISTS youtube_db.channels (
             Channel_id VARCHAR(255) PRIMARY KEY,
             Channel_name VARCHAR(255),
             Playlist_id VARCHAR(255),
@@ -262,7 +263,7 @@ if selected == "Extract and Transform":
         """
 
         create_videos_table_query = """
-        CREATE TABLE IF NOT EXISTS data_demo.videos (
+        CREATE TABLE IF NOT EXISTS youtube_db.videos (
             Channel_name VARCHAR(255),
             Channel_id VARCHAR(255),
             Video_id VARCHAR(255) PRIMARY KEY,
@@ -281,7 +282,7 @@ if selected == "Extract and Transform":
         """
 
         create_comments_table_query = """
-        CREATE TABLE IF NOT EXISTS data_demo.comments (
+        CREATE TABLE IF NOT EXISTS youtube_db.comments (
             Comment_id VARCHAR(255) PRIMARY KEY,
             Video_id VARCHAR(255),
             Comment_text TEXT,
@@ -473,11 +474,39 @@ if selected == "View":
         st.write(df)
 
     elif questions == '9. What is the average duration of all videos in each channel, and what are their corresponding channel names?':
-        mycursor.execute("""SELECT Channel_name, AVG(Duration) AS Average_Duration
-                            FROM videos
-                            GROUP BY Channel_name""")
-        df = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
+        channel_names = []
+        avg_durations = []
+
+        # Fetch unique channel names
+        mycursor.execute("SELECT DISTINCT Channel_name FROM videos")
+        channels = mycursor.fetchall()
+
+        for channel in channels:
+            channel_name = channel[0]
+            # Execute SQL query to calculate average duration for each channel
+            mycursor.execute("SELECT AVG(TIME_TO_SEC(Duration)) AS Average_Seconds "
+                            "FROM videos "
+                            "WHERE Channel_name = %s", (channel_name,))
+            result = mycursor.fetchone()
+            average_seconds = result[0] if result[0] is not None else 0
+            average_duration = time.strftime('%H:%M:%S', time.gmtime(average_seconds))  # Convert average seconds to HH:MM:SS format
+
+            # Append channel name and average duration to lists
+            channel_names.append(channel_name)
+            avg_durations.append(average_duration)
+
+        # Create DataFrame
+        df = pd.DataFrame({'Channel Name': channel_names, 'Average Duration': avg_durations})
         st.write(df)
+
+
+    # elif questions == '9. What is the average duration of all videos in each channel, and what are their corresponding channel names?':
+    #         mycursor.execute("""SELECT Channel_name, AVG(Duration) AS Average_Duration
+    #                             FROM videos
+    #                             GROUP BY Channel_name""")
+    #         df = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
+    #         st.write(df)
+
 
     elif questions == '10. Which videos have the highest number of comments, and what are their corresponding channel names?':
         mycursor.execute("""SELECT a.Channel_name, a.Title AS Video_Title, b.Total_Comments
