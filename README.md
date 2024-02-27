@@ -26,7 +26,8 @@ This project aims to streamline the retrieval, storage, and presentation of YouT
 7. You should now be able to access the application via your web browser.
 
 ## Screenshots
-Include screenshots of the application interface here.
+![image](https://github.com/AnbarasanKrishnan1/project_1/assets/142040700/fd18529a-a9f0-4b89-b6d3-8616419cf245)
+
 
 ## Future Improvements
 - Implement user authentication and authorization for secure access to the application.
