@@ -3,7 +3,7 @@
 ## Overview
 This project aims to streamline the retrieval, storage, and presentation of YouTube channel data. It utilizes a combination of Python, MongoDB, MySQL, and Streamlit to accomplish this task. The application fetches data from the YouTube Data API, stores it initially in MongoDB, migrates and transforms it into a structured MySQL database, and finally presents it through a user-friendly Streamlit interface.
 
-##Goal of YDH&W
+## Goal of YDH&W
  YouTube Data Harvesting and Warehousingserves several purposes
 - Data Retrieval from YouTube
 - Data Storage
@@ -11,7 +11,7 @@ This project aims to streamline the retrieval, storage, and presentation of YouT
 - User Interface
 - Analysis and Reporting
 
-Overall, the YouTube Data Harvesting facilitates the seamless extraction, storage, transformation, and analysis of YouTube data, empowering users to derive valuable insights for various purposes, such as marketing, research, or content creation strategies.
+Overall, YouTube Data Harvesting facilitates the seamless extraction, storage, transformation, and analysis of YouTube data, empowering users to derive valuable insights for various purposes, such as marketing, research, or content creation strategies.
 
 ## Technologies Used
 - Python
@@ -23,14 +23,14 @@ Overall, the YouTube Data Harvesting facilitates the seamless extraction, storag
 ## Key Features
 - Data Retrieval: Utilizes the YouTube Data API to fetch channel data.
 - Storage: Stores the retrieved data in MongoDB for initial storage.
-- Migration and Transformation: Converts and organizes the data into a SQL database for structured storage and enhanced querying capabilities.
+- Migration and Transformation: Converts and organizes the data into an SQL database for structured storage and enhanced querying capabilities.
 - Data Presentation: Displays the queried data through a Streamlit application, providing users with a seamless interface for accessing and analyzing YouTube channel insights.
 
 
 ## How to Run the Application
 1. Clone this repository to your local machine.
 2. Install the required dependencies using `pip install -r requirements.txt`.
-3. Obtain API keys for YouTube Data API and replace `api_key` variable in the code with your own API key.
+3. Obtain API keys for YouTube Data API and replace the `api_key` variable in the code with your own API key.
 4. Make sure you have MongoDB installed and running locally or provide the appropriate MongoDB URI in the code.
 5. Make sure you have MySQL installed and running locally or provide the appropriate MySQL connection details in the code.
 6. Run the Streamlit application using `streamlit run app.py`.
