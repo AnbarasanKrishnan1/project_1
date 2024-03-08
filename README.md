@@ -39,25 +39,25 @@ Overall, the YouTube Data Harvesting facilitates the seamless extraction, storag
 ## work Flow Diagram
 
 A[Start] --> B{Run Script (streamlit run foldername.py)}<br>
-B --> C{Streamlit App Opens}.
-C --> D{Extract & Transform (Optional)}
-    [Yes (Transform Required)] --> D1{Perform Transformations}
-    D1 --> E{Extracted Data}
-C --> E{Extracted Data (No Transformation)}
-E --> F{Upload Channel ID}
-    [Valid Channel ID?] --> F1{Invalid ID: Error Message}
-    F --> G{Extract Data}
-        [API Rate Limit?] --> G1{Wait for Reset or Retry Later}
-        G --> H{Store to MongoDB (Optional)}
-            [MongoDB Connection Successful?] --> H1{Connection Error: Retry or Fix Configuration}
-            H --> I{View}
-            H --> N{Skip MongoDB Upload}
-        G --> I{View} (Data not stored in MongoDB)
-I[Select Channel (Dropdown Menu)] --> J{Submit}
-J --> K{Formulate Question based on User Input}
-K --> L{Retrieve Answer from Processed Data}
-    [Answer Found?] --> L1{No Answer Found: Display Message}
-    L --> M{Display Answer}
+B --> C{Streamlit App Opens}<br>
+C --> D{Extract & Transform (Optional)}<br>
+    [Yes (Transform Required)] --> D1{Perform Transformations}<br>
+    D1 --> E{Extracted Data}<br>
+C --> E{Extracted Data (No Transformation)}<br>
+E --> F{Upload Channel ID}<br>
+    [Valid Channel ID?] --> F1{Invalid ID: Error Message}<br>
+    F --> G{Extract Data}<br>
+        [API Rate Limit?] --> G1{Wait for Reset or Retry Later}<br>
+        G --> H{Store to MongoDB (Optional)}<br>
+            [MongoDB Connection Successful?] --> H1{Connection Error: Retry or Fix Configuration}<br>
+            H --> I{View}<br>
+            H --> N{Skip MongoDB Upload}<br>
+        G --> I{View} (Data not stored in MongoDB)<br>
+I[Select Channel (Dropdown Menu)] --> J{Submit}<br>
+J --> K{Formulate Question based on User Input}<br>
+K --> L{Retrieve Answer from Processed Data}<br>
+    [Answer Found?] --> L1{No Answer Found: Display Message}<br>
+    L --> M{Display Answer}<br>
 M --> A (Loop back to Start)
 
 ## Screenshots
