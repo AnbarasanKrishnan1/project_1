@@ -17,6 +17,7 @@ Overall, YouTube Data Harvesting facilitates the seamless extraction, storage, t
 - Python
 - MongoDB
 - MySQL
+- pandas
 - Streamlit
 - Google YouTube Data API
 
