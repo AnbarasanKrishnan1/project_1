@@ -38,7 +38,7 @@ Overall, the YouTube Data Harvesting facilitates the seamless extraction, storag
 
 ## work Flow Diagram
 
-A[Start] --> B{Run Script (streamlit run foldername.py)}.
+A[Start] --> B{Run Script (streamlit run foldername.py)}<br>
 B --> C{Streamlit App Opens}.
 C --> D{Extract & Transform (Optional)}
     [Yes (Transform Required)] --> D1{Perform Transformations}
