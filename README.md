@@ -36,9 +36,10 @@ Overall, the YouTube Data Harvesting facilitates the seamless extraction, storag
 6. Run the Streamlit application using `streamlit run app.py`.
 7. You should now be able to access the application via your web browser.
 
-## work Flow Diagram
+## Work Flow Diagram
 
-<p> """ A[Start] --> B{Run Script (streamlit run foldername.py)}<br>
+<pre> 
+A[Start] --> B{Run Script (streamlit run foldername.py)}<br>
 B --> C{Streamlit App Opens}<br>
 C --> D{Extract & Transform (Optional)}<br>
     [Yes (Transform Required)] --> D1{Perform Transformations}<br>
@@ -58,7 +59,8 @@ J --> K{Formulate Question based on User Input}<br>
 K --> L{Retrieve Answer from Processed Data}<br>
     [Answer Found?] --> L1{No Answer Found: Display Message}<br>
     L --> M{Display Answer}<br>
-M --> A (Loop back to Start)"""</p>
+M --> A (Loop back to Start)
+</pre>
 
 ## Screenshots
 ![image](https://github.com/AnbarasanKrishnan1/project_1/assets/142040700/fd18529a-a9f0-4b89-b6d3-8616419cf245)
