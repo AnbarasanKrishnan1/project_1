@@ -4,28 +4,49 @@ import plotly.express as px
 import streamlit as st
 from streamlit_option_menu import option_menu
 import mysql.connector as sql
-import pymongo
 from googleapiclient.discovery import build
 from PIL import Image
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 # pip install SQLAlchemy==1.4.0
-from sqlalchemy import create_engine
-#pip install streamlit_lottie tyr to animation
+import json 
+import requests 
+from streamlit_lottie import st_lottie 
+import streamlit.components.v1 as com
+import matplotlib.pyplot as plt
 
-# my sql time to seconds code in 9 the qustion hint
 
-# # SETTING PAGE CONFIGURATIONS
+
+# SETTING PAGE CONFIGURATIONS
 icon = Image.open("Youtube_logo.png")
 st.set_page_config(page_title= "Youtube Data Harvesting and Warehousing | By Anbarasan",
                    page_icon= icon,
                    layout= "wide",
                    initial_sidebar_state= "expanded",
                    menu_items={'About': """# This app is created by *Anbarasan*"""})  
+#Streamlit Title & Header 
+
 
 with st.sidebar:
-    st.image("Youtubes.png", use_column_width=True)
-    selected = option_menu(None, ["Home", "Extract and Transform", "View"],
+        #animation
+    def animation():
+            path = "D:\Guvi\YTlogo.json"
+            with open(path,"r") as file: 
+                url = json.load(file) 
+                
+
+            st_lottie(url, 
+                reverse=True, 
+                #height=300, 
+                width=300, 
+                speed=1, 
+                loop=True, 
+                quality='high', 
+                key='logo12'
+            ) 
+            return st_lottie
+    animation()
+    selected = option_menu(None, ["Home", "Extract and Transform", "View","Learn_More"],
                         #   icons=[":arrow_forward:", "tools", "card-text"],
                            default_index=0,
                            orientation="vertical",
@@ -33,7 +54,14 @@ with st.sidebar:
                                                 "--hover-color": "#87CEEB"},
                                    "icon": {"font-size": "30px"},
                                    "container": {"max-width": "6000px"},
-                                   "nav-link-selected": {"background-color": "#C80101"}})
+                                   "nav-link-selected": {"background-color": "#87CEEB"}})
+    st.markdown("""
+        <style>
+        sidebar .sidebar-content {
+            background-color: #111 !important;
+        }
+        </style>
+            """, unsafe_allow_html=True)
 
 # Bridging a connection with MongoDB Atlas and Creating a new database(youtube_data)
 # mongoDB database
@@ -108,7 +136,6 @@ def get_channel_videos(channel_id):
             break
     return video_ids
 
-
 # FUNCTION TO GET VIDEO DETAILS
 def get_video_details(v_ids):
     video_stats = []
@@ -136,7 +163,6 @@ def get_video_details(v_ids):
                                  )
             video_stats.append(video_details)
     return video_stats
-
 
 # FUNCTION TO GET COMMENT DETAILS
 def get_comments_details(v_id):
@@ -167,7 +193,7 @@ def get_comments_details(v_id):
 
 
 # FUNCTION TO CHECK IF CHANNEL EXISTS
-def channel_exists(channel_name):
+def channel_exist(channel_name):
     return db.channel_details.find_one({"Channel_name": channel_name}) is not None
 
 
@@ -180,7 +206,25 @@ def channel_names():
 
 
 # HOME PAGE
-if selected == "Home":
+if selected == "Home": 
+    #animation
+    def animation():
+            path = "D:\Guvi\ytlogo1.json"
+            with open(path,"r") as file: 
+                url = json.load(file) 
+                
+
+            st_lottie(url, 
+                reverse=True, 
+                height=400, 
+                # width=400, 
+                speed=1, 
+                loop=True, 
+                quality='high', 
+                key='logo1'
+            ) 
+            return st_lottie
+    animation()
     st.markdown("<h1 style='text-align: center;'>Social Media Data Integration Project</h1>", unsafe_allow_html=True)
     st.subheader("Overview")
     st.write("""This project utilizes a combination of Python, MongoDB, YouTube Data API, MySQL, and Streamlit to streamline the retrieval, storage, 
@@ -201,16 +245,34 @@ if selected == "Home":
                 - Migration and Transformation: Converting and organizing the data into a SQL database for structured storage and enhanced querying capabilities.
                 - Data Presentation: Displaying the queried data through a Streamlit application, providing users with a seamless interface for accessing and analyzing YouTube channel insights.
                 ''')
-    
+
 # EXTRACT and TRANSFORM PAGE
 if selected == "Extract and Transform":
     tab1, tab2 = st.columns(2)  # Define two columns for tabs
 
-    # EXTRACT TAB
+
+    # EXTRACT TAB    
     with tab1:
+        #animation
+        def animation(): 
+            path = "D:\Guvi\demo.json"
+            with open(path,"r") as file: 
+                url = json.load(file) 
+
+            st_lottie(url, 
+                reverse=True, 
+                height=200, 
+                width=200, 
+                speed=1, 
+                loop=True, 
+                quality='high', 
+                key='demo'
+            ) 
+            return st_lottie
+        animation()
         st.markdown("# ")
         st.write("### Enter YouTube Channel_ID below :")
-        ch_id = st.text_input("Hint : Go to the channel home page, click this aero mark > scroll down, then click share channel, and copy channel ID  Mulit channel ID use comma" ).split(',')
+        ch_id = st.text_input("Hint : In youtube, Go to the channel home page, click this > aero mark scroll down, then click share channel, and copy channel ID and paste it. If Mulit channel ID use comma" ).split(',')
 
         if ch_id and st.button("Extract Data"):
             ch_details = get_channel_details(ch_id)
@@ -218,7 +280,7 @@ if selected == "Extract and Transform":
             st.table(ch_details)
 
         if st.button("Upload to MongoDB"):
-            with st.spinner('Please Wait for Uploading to MongoDB...'):
+            with st.spinner('Please Wait for Uploading to MongoDB...'): 
                 ch_details = get_channel_details(ch_id)
                 v_ids = get_channel_videos(ch_id)
                 vid_details = get_video_details(v_ids)
@@ -231,7 +293,7 @@ if selected == "Extract and Transform":
                 comm_details = comments()
 
                 # Check if channel already exists
-                existing_channel = channel_exists(ch_details[0]["Channel_name"])
+                existing_channel = channel_exist(ch_details[0]["Channel_name"])
                 if not existing_channel:
                     db.channel_details.insert_many(ch_details)
                     db.video_details.insert_many(vid_details)
@@ -242,6 +304,23 @@ if selected == "Extract and Transform":
 
     # TRANSFORM TAB
     with tab2:
+        #animation
+        def animation():           
+            path = "D:\Guvi\dataupload.json"
+            with open(path,"r") as file: 
+                url = json.load(file) 
+
+            st_lottie(url, 
+                reverse=True, 
+                height=200, 
+                width=200, 
+                speed=1, 
+                loop=True, 
+                quality='high', 
+                key='dataupload'
+            ) 
+            return st_lottie
+        animation()
         st.markdown("#   ")
         st.markdown("### Select a channel to begin Transformation to SQL")
 
@@ -363,7 +442,7 @@ if selected == "Extract and Transform":
                     mycursor.execute(query, values)
                     mydb.commit()
 
-        if st.button("Submit"):
+        if st.button("Submit"): 
             try:
                 insert_into_channels()
                 insert_into_videos()
@@ -374,8 +453,33 @@ if selected == "Extract and Transform":
 
 # VIEW PAGE
 if selected == "View":
-    
-    st.write("## :orange[Select any question to get Insights]")
+    #         #animation
+    # def animation():
+    #         path = "D:\Guvi\search.json"
+    #         with open(path,"r") as file: 
+    #             url = json.load(file) 
+                
+    #         st_lottie(url, 
+    #             reverse=True, 
+    #             #height=300, 
+    #             width=300, 
+    #             speed=1, 
+    #             loop=True, 
+    #             quality='high', 
+    #             key='logo12'
+    #         ) 
+    #         return st_lottie
+    # animation()
+    st.markdown("""
+        <style>
+        body {
+            color: #fff;
+            background-color: #111;
+        }
+        </style>
+            """, unsafe_allow_html=True)
+            
+    st.write("## :blue[Select any question to get Insights]")
     questions = st.selectbox('Questions',
                             ['Click the question that you would like to query',
                             '1. What are the names of all the videos and their corresponding channels?',
@@ -391,14 +495,16 @@ if selected == "View":
                             
     if questions == '1. What are the names of all the videos and their corresponding channels?':
         mycursor.execute("""SELECT title AS Video_Title, channel_name AS Channel_Name FROM videos ORDER BY channel_name""")
-        df = pd.DataFrame(mycursor.fetchall(),columns=mycursor.column_names)
+        df = pd.DataFrame(mycursor.fetchall(),
+                          columns=mycursor.column_names)
         st.write(df)
+        st.write(" :blue[ HINT : This allows you to retrieve all of the video names along with their channels. It will assist you in determining which names can be utilized in the competition.]")      
         
     elif questions == '2. Which channels have the most number of videos, and how many videos do they have?':
-        mycursor.execute("""SELECT channel_name 
-        AS Channel_Name, total_videos AS Total_Videos
-                            FROM channels
-                            ORDER BY total_videos DESC""")
+        mycursor.execute("""SELECT channel_name AS Channel_Name, 
+                        total_videos AS Total_Videos 
+                        FROM channels
+                        ORDER BY total_videos DESC""")
         df = pd.DataFrame(mycursor.fetchall(),columns=mycursor.column_names)
         st.write(df)
         st.write("### :green[Number of videos in each channel :]")
@@ -409,6 +515,8 @@ if selected == "View":
                      color=mycursor.column_names[0]
                     )
         st.plotly_chart(fig,use_container_width=True)
+        st.write(" :blue[ HINT : This will help you to know the how many video other channel will published.]")      
+
         
     elif questions == '3. What are the top 10 most viewed videos and their respective channels?':
         mycursor.execute("""SELECT channel_name AS Channel_Name, title AS Video_Title, views AS Views 
@@ -425,7 +533,8 @@ if selected == "View":
                      color=mycursor.column_names[0]
                     )
         st.plotly_chart(fig,use_container_width=True)
-        
+        st.write(" :blue[ HINT :  This will help you to know which video will good performade, This Analyze will help you to improved your next video.]") 
+              
     elif questions == '4. How many comments were made on each video, and what are their corresponding video names?':
         mycursor.execute("""SELECT a.video_id AS Video_id, a.title AS Video_Title, b.Total_Comments
                             FROM videos AS a
@@ -435,7 +544,8 @@ if selected == "View":
                             ORDER BY b.Total_Comments DESC""")
         df = pd.DataFrame(mycursor.fetchall(),columns=mycursor.column_names)
         st.write(df)
-          
+
+
     elif questions == '5. Which videos have the highest number of likes, and what are their corresponding channel names?':
         mycursor.execute("""SELECT channel_name AS Channel_Name,title AS Title,likes AS Likes_Count 
                             FROM videos
@@ -451,6 +561,8 @@ if selected == "View":
                      color=mycursor.column_names[0]
                     )
         st.plotly_chart(fig,use_container_width=True)
+        st.write(" :blue[ HINT :  This will help you to know which video will good performade, This Analyze will help you to improved your next video.]") 
+
         
     elif questions == '6. What is the total number of likes and dislikes for each video, and what are their corresponding video names?':
         mycursor.execute("""SELECT title AS Title, likes AS Likes_Count
@@ -458,13 +570,18 @@ if selected == "View":
                             ORDER BY likes DESC""")
         df = pd.DataFrame(mycursor.fetchall(),columns=mycursor.column_names)
         st.write(df)
-         
+        st.write(" :blue[ HINT :  This will help you to know which video will good Response, This Analyze will help you to improved your next video.]") 
+
+        
     elif questions == '7. What is the total number of views for each channel, and what are their corresponding channel names?':
         mycursor.execute("""SELECT channel_name AS Channel_Name, SUM(views) AS Total_Views
                             FROM videos
                             GROUP BY channel_name""")
         df = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
         st.write(df)
+        st.write(" :blue[ HINT :  This will help you to know which channel have high number view.]") 
+
+        
     elif questions == '8. What are the names of all the channels that have published videos in the year 2022?':
         mycursor.execute("""SELECT channel_name AS Channel_Name
                             FROM videos
@@ -474,30 +591,45 @@ if selected == "View":
         st.write(df)
 
     elif questions == '9. What is the average duration of all videos in each channel, and what are their corresponding channel names?':
-        channel_names = []
-        avg_durations = []
-
-        # Fetch unique channel names
-        mycursor.execute("SELECT DISTINCT Channel_name FROM videos")
-        channels = mycursor.fetchall()
-
-        for channel in channels:
-            channel_name = channel[0]
-            # Execute SQL query to calculate average duration for each channel
-            mycursor.execute("SELECT AVG(TIME_TO_SEC(Duration)) AS Average_Seconds "
-                            "FROM videos "
-                            "WHERE Channel_name = %s", (channel_name,))
-            result = mycursor.fetchone()
-            average_seconds = result[0] if result[0] is not None else 0
-            average_duration = time.strftime('%H:%M:%S', time.gmtime(average_seconds))  # Convert average seconds to HH:MM:SS format
-
-            # Append channel name and average duration to lists
-            channel_names.append(channel_name)
-            avg_durations.append(average_duration)
-
-        # Create DataFrame
-        df = pd.DataFrame({'Channel Name': channel_names, 'Average Duration': avg_durations})
+        mycursor.execute("""SELECT channel_name, 
+                                CONCAT(
+                                    LPAD(FLOOR(avg_duration / 3600), 2, '0'), ':', 
+                                    LPAD(FLOOR((avg_duration % 3600) / 60), 2, '0'), ':', 
+                                    LPAD(avg_duration % 60, 2, '0')
+                                ) AS average_duration
+                            FROM (
+                                SELECT channel_name, 
+                                    AVG(duration_sec) AS avg_duration
+                                FROM (
+                                    SELECT channel_name, 
+                                        CASE
+                                            WHEN duration LIKE '%H%M%S' THEN 
+                                                TIME_TO_SEC(CONCAT(
+                                                    SUBSTRING_INDEX(SUBSTRING_INDEX(duration, 'H', 1), 'T', -1), ':',
+                                                    SUBSTRING_INDEX(SUBSTRING_INDEX(duration, 'M', 1), 'H', -1), ':',
+                                                    SUBSTRING_INDEX(SUBSTRING_INDEX(duration, 'S', 1), 'M', -1)
+                                                ))
+                                            WHEN duration LIKE '%M%S' THEN 
+                                                TIME_TO_SEC(CONCAT(
+                                                    '0:', SUBSTRING_INDEX(SUBSTRING_INDEX(duration, 'M', 1), 'T', -1), ':',
+                                                    SUBSTRING_INDEX(SUBSTRING_INDEX(duration, 'S', 1), 'M', -1)
+                                                ))
+                                            WHEN duration LIKE '%S' THEN 
+                                                TIME_TO_SEC(CONCAT('0:0:', SUBSTRING_INDEX(SUBSTRING_INDEX(duration, 'S', 1), 'T', -1)))
+                                        END AS duration_sec
+                                    FROM videos
+                                ) AS subquery
+                                GROUP BY channel_name
+                            ) AS avg_subquery""")
+        df = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
         st.write(df)
+
+        st.write("### :green[Average video duration for channels :]")
+            # Plotting using Plotly
+        fig = px.bar(df, x='channel_name', y='average_duration', labels={'channel_name': 'Channel Name', 'average_duration': 'Average Duration'})
+        fig.update_layout(title='Average Video Duration for Each Channel')
+        st.plotly_chart(fig)
+
 
     elif questions == '10. Which videos have the highest number of comments, and what are their corresponding channel names?':
         mycursor.execute("""SELECT a.Channel_name, a.Title AS Video_Title, b.Total_Comments
@@ -509,3 +641,82 @@ if selected == "View":
                             ORDER BY b.Total_Comments DESC""")
         df = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
         st.write(df)
+
+# Learn_More
+if selected == "Learn_More":
+
+    st.write("## :blue[Get More Analysis of this data - Select any question to get Insights]")
+    questions = st.selectbox('Questions',
+                            ['Click the question that you would like to query',
+                            '1. Which channels have the highest subscriber count, and what are their subscriber counts?',
+                            '2. What is the average number of views, likes, and comments per video for each channel?',
+                            '3. Which videos have the highest engagement rate (likes + comments) relative to their views?',
+                            '4. Which channels have the highest growth rate in terms of subscribers over a specific time period?'])
+    
+    # Query to fetch channels sorted by subscriber count
+    if questions == '1. Which channels have the highest subscriber count, and what are their subscriber counts?':
+        mycursor.execute("""SELECT Channel_name, Subscribers
+                            FROM channels
+                            ORDER BY Subscribers DESC""")
+        df_subscribers = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
+        st.write(df_subscribers)
+        st.write(":blue[ HINT :Using this, you can simply locate your rivals' subscribers.]")
+
+    elif questions == '2. What is the average number of views, likes, and comments per video for each channel?':
+            # Query to calculate average views, likes, and comments per video for each channel
+        mycursor.execute("""SELECT Channel_name,
+                        AVG(Views) AS Avg_Views,
+                        AVG(Likes) AS Avg_Likes,
+                        AVG(Comments) AS Avg_Comments
+                        FROM videos
+                        GROUP BY Channel_name""")
+        df_avg_stats = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
+        st.write(df_avg_stats)
+
+        # Bar chart for average views per video
+        fig_views = px.bar(df_avg_stats, x='Channel_name', y='Avg_Views',
+                        title='Average Views per Video for Each Channel')
+        st.plotly_chart(fig_views, use_container_width=True)
+
+        # Bar chart for average likes per video
+        fig_likes = px.bar(df_avg_stats, x='Channel_name', y='Avg_Likes',
+                        title='Average Likes per Video for Each Channel')
+        st.plotly_chart(fig_likes, use_container_width=True)
+
+        # Bar chart for average comments per video
+        fig_comments = px.bar(df_avg_stats, x='Channel_name', y='Avg_Comments',
+                            title='Average Comments per Video for Each Channel')
+        st.plotly_chart(fig_comments, use_container_width=True)
+
+        # Query to calculate engagement rate for each video
+    elif questions == '3. Which videos have the highest engagement rate (likes + comments) relative to their views?':
+        mycursor.execute("""SELECT Title AS Video_Title,
+                            (Likes + Comments) / Views AS Engagement_Rate
+                            FROM videos
+                            ORDER BY Engagement_Rate DESC
+                            LIMIT 10""")
+        df_engagement = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
+        st.write(df_engagement)
+        # Create bar chart for engagement rate
+        fig_engagement = px.bar(df_engagement, x='Engagement_Rate', y='Video_Title',
+                        title='Top 10 Videos by Engagement Rate')
+        st.plotly_chart(fig_engagement, use_container_width=True)
+
+    elif questions == '4. Which channels have the most active communities based on the number of comments relative to views?':
+        mycursor.execute("""SELECT Channel_name,
+                            SUM(Comments) / SUM(Views) AS Comment_to_View_Ratio
+                            FROM videos
+                            GROUP BY Channel_name
+                            ORDER BY Comment_to_View_Ratio DESC
+                            LIMIT 10""")
+        df_comment_ratio = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
+        st.write(df_comment_ratio)
+
+
+
+
+    
+
+
+
+    
