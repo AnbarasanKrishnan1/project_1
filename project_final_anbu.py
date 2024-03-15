@@ -24,9 +24,8 @@ st.set_page_config(page_title= "Youtube Data Harvesting and Warehousing | By Anb
                    layout= "wide",
                    initial_sidebar_state= "expanded",
                    menu_items={'About': """# This app is created by *Anbarasan*"""})  
+
 #Streamlit Title & Header 
-
-
 with st.sidebar:
         #animation
     def animation():
